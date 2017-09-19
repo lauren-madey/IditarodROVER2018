@@ -2,6 +2,8 @@
 ## [Iditarod Motorsports ROVER Team](http://iditarodmotorsports.weebly.com/)
 Some of this code is sample code from the company Ten80.
 
+#### Communications and Sharing platform used by the Iditarod ROVER Team
+
 ### Software Used
 Processing: https://processing.org/download/ -used to created coded imagery for the wireless control panel
 
