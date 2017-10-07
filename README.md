@@ -1,6 +1,7 @@
 # IditarodROVER2018
 ## [Iditarod Motorsports ROVER Team](http://iditarodmotorsports.weebly.com/)
-Some of this code is sample code from the company Ten80.
+All code under /ten80 is written by Ten80.
+Default copyright laws apply for any code under /source.
 
 #### Communications and Sharing platform used by the Iditarod ROVER Team
 
