@@ -1,5 +1,13 @@
 #include <Wire.h>
 
+void sleep(int sec) {
+  int x = millis() + (sec * 1000);
+  while (millis() < x)
+  {
+    ;
+  }
+}
+
 void setup()
 {
   pinMode(3, OUTPUT);
@@ -12,7 +20,7 @@ void roveDrive(bool MotorA, bool MotorB, int speedA, int speedB)
 {
   digitalWrite(12, MotorA);
   digitalWrite(13, MotorB);
-  analogWerite(3, speedA);
+  analogWrite(3, speedA);
   analogWrite(11, speedB);
 }
 
@@ -26,6 +34,6 @@ void roveStop()
 void loop()
 {
   roveDrive(true, true, 100, 100);
-  delay(5000);
-  roveStop();
+  sleep(1);
+  exit(1);
 }
