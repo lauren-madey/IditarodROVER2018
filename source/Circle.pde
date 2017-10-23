@@ -9,6 +9,21 @@
 /* Assign a unique ID to this sensor at the same time */
 Adafruit_LSM303_Mag_Unified mag = Adafruit_LSM303_Mag_Unified(12345);
  
+void roveDrive(bool MotorA, bool MotorB, unsigned int speedA, unsigned int speedB)
+{
+  digitalWrite(12, !MotorA);
+  digitalWrite(13, !MotorB);
+  analogWrite(3, speedA);
+  analogWrite(11, speedB);
+}
+
+void roveStop()
+{
+  analogWrite(3, 0);
+  analogWrite(11, 0);
+  delay(1);
+}
+ 
 void sleep(int sec) {
   int x = millis() + (sec * 1000);
   while (millis() < x)
