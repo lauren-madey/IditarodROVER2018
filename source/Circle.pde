@@ -26,10 +26,7 @@ void roveStop()
  
 void sleep(int sec) {
   int x = millis() + (sec * 1000);
-  while (millis() < x)
-  {
-    ;
-  }
+  while (millis() < x) {;}
 }
 
 void setup(void) 
@@ -39,15 +36,11 @@ void setup(void)
   pinMode(12, OUTPUT);
   pinMode(13, OUTPUT);
   
-  Serial.begin(9600);
-  Serial.println("Magnetometer Test"); Serial.println("");
-  
   /* Initialise the sensor */
   if(!mag.begin())
   {
     /* There was a problem detecting the LSM303*/
-    Serial.println("no LSM303 detected ");
-    while(1);
+    exit(-1);
   }
 }
   
@@ -69,10 +62,8 @@ void loop(void)
   }
   
   roveDrive(false, true, 0, 255);
-  while !((heading > 358) && (heading < 5))
-  {
-    ;
-  }
+  while !((heading > 358) && (heading < 5)) {;}
   roveDrive(true, true, 100, 100);
+  
   sleep(2);
 }
