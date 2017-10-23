@@ -62,7 +62,7 @@ void loop(void)
   }
   
   roveDrive(false, true, 0, 255);
-  while !((heading > 358) && (heading < 5)) {;}
+  while !((heading > 340) && (heading < 5)) {;}
   roveDrive(true, true, 100, 100);
   
   sleep(2);
