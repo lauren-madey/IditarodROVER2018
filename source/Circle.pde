@@ -31,6 +31,7 @@ void sleep(int sec) {
 
 void setup(void) 
 {
+  Serial.begin(9600);
   pinMode(3, OUTPUT);
   pinMode(11, OUTPUT);
   pinMode(12, OUTPUT);
@@ -60,10 +61,14 @@ void loop(void)
   {
     heading = 360 + heading;
   }
+
+  
   
   roveDrive(false, true, 0, 255);
-  while !((heading > 340) && (heading < 5)) {;}
+  while (!((heading > 200) || (heading < 230))) {
+    float heading = (atan2(event.magnetic.y,event.magnetic.x) * 180) / Pi;
+    Serial.println(heading);
+  }
   roveDrive(true, true, 100, 100);
-  
   sleep(2);
 }
