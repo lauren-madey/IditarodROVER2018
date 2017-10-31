@@ -1,4 +1,6 @@
-/*
+/* Lauren Madey
+ * driveTheDistance.ino
+ *
  * targetDistance Tests
  * ---------------------
  * targetDistance=10
@@ -36,8 +38,6 @@ void setup()
   Serial.begin(9600);
 }
 
-
-
 void loop()
 {
   /*
@@ -67,13 +67,13 @@ void loop()
 
   //Go full speed if Rover is not within target distance yet
   else if (distanceTravelled < approachDistance) {
-    roveDrive(HIGH, HIGH, goSpeed, goSpeed);
+    roveDrive(true, true, goSpeed, goSpeed);
     Serial.println("Full speed");
   }
 
   //Slow Rover down while within target distance
   else if (distanceTravelled >= approachDistance) {
-    roveDrive(HIGH, HIGH, approachSpeed, approachSpeed);
+    roveDrive(true, true, approachSpeed, approachSpeed);
     Serial.println("Approaching");
   }
 }

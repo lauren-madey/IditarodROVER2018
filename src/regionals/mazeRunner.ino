@@ -1,4 +1,5 @@
-/* 
+/* Lauren Madey
+ * mazeRunner.ino
  */
 
 
@@ -25,92 +26,86 @@ void setup()
 
 void loop()
 {
-  /* This section allows for a input coming from the serial port to determine the distance
-   * This can be used later for sending a distance wirlessly throught the Xbee
--------------------------------------------------------------------------------------------
-  //If anything is on the serial port, read the full string in and store it in 'incoming'
-  while (Serial.available()) {
+  /* 
+    This section allows for a input coming from the serial port to determine the distance
+    This can be used later for sending a distance wirlessly throught the Xbee
+    -------------------------------------------------------------------------------------------
+    //If anything is on the serial port, read the full string in and store it in 'incoming'
+    while (Serial.available()) {
       incoming = Serial.readStringUntil ('\n');       //get whatever was sent via the serial port unitl a line break
       targetDistance = incoming.toInt();            // convert string to an integer (We need a number distance)
-      count =0;
-    } */
- 
- for (int x=0; x<2; x++) // for( intialize variable, condition, incremnet)
- {
-   travelBlock();
- }
- 
- delay(1000);           // wait 1 second
- 
- for (int y=0; y<1; y++) 
- {
-   roveDrive(HIGH, LOW, goSpeed, goSpeed);
-   delay(4000);
-   roveStop();
- }
+      count=0;
+    }
+  */
 
-   delay(1000);   
+  int x;
 
- for (int z=0; z<1; z++) 
- {
-   roveDrive(LOW, HIGH, goSpeed, goSpeed);
-   delay(4000);
-   roveStop();
- }
- 
+  for (x=0; x<2; x++) 
+  {
+    travelBlock();
+  }
+  
+  delay(1000);
+  
+  for (x=0; x<1; x++) 
+  {
+    roveDrive(true, false, goSpeed, goSpeed);
+    delay(4000);
+    roveStop();
+  }
 
+  delay(1000);   
+
+  for (x=0; x<1; x++) 
+  {
+    roveDrive(false, true, goSpeed, goSpeed);
+    delay(4000);
+    roveStop();
+  }
 }
-
-
-
-
-
 
 //------------------------FUNCTIONS ----------------------------------------
 
 //-----------------------Driving a certian distance-------------------------
 void travelBlock()
 {  
-// Calculate distance travelled in inches
-// Wheel Circumference * Pi /8 * count
-float distanceTravelled = 2.975 * PI/8.00 * float (count);
+  // Calculate distance travelled in inches
+  // Wheel Circumference * Pi /8 * count
+  float distanceTravelled = 2.975 * PI/8.00 * float(count);
 
-Serial.println (distanceTravelled);                   //send result to Serial port
+  Serial.println(distanceTravelled); //send result to Serial port
 
-targetDistance=3;
+  targetDistance=3;
 
-// STOP the Rover if target distance is reached or no target Distance is set.
-if ((distanceTravelled >= targetDistance)) //&& (targetDistance == NULL))
-{
-  roveStop();
-  Serial.println ("STOPPPING");
-}
+  // STOP the Rover if target distance is reached or no target Distance is set.
+  if (distanceTravelled >= targetDistance)
+  {
+    roveStop();
+    Serial.println("Stopping");
+  }
 
-//Go full speed if Rover is not within target distance yet
-else if (distanceTravelled < approachDistance)
-{
-  roveDrive (HIGH, HIGH, goSpeed, goSpeed);
-  Serial.println ("Full Speed");
-}
+  //Go full speed if Rover is not within target distance yet
+  else if (distanceTravelled < approachDistance)
+  {
+    roveDrive(true, true, goSpeed, goSpeed);
+    Serial.println("Full Speed");
+  }
 
-//Slow Rover down while within target distance
-else if (distanceTravelled >= approachDistance)
-{
-  roveDrive (HIGH, HIGH, approachSpeed, approachSpeed);
-  Serial.println ("approaching");
-}
+  //Slow Rover down while within target distance
+  else if (distanceTravelled >= approachDistance)
+  {
+    roveDrive(true, true, approachSpeed, approachSpeed);
+    Serial.println("Approaching");
+  }
 }
 
 //---------Interrup Sevice Routine for Wheel encoder------------------------
 void wheel()
 {
   count++;                      //increment count by one whenever function is called.
-  Serial.print ("w,");          
-  Serial.println (count);
+  Serial.print("w,");          
+  Serial.println(count);
 }
-
-
-
 
 //----------Rover Drive Functions-----------------------------------------
 /*
@@ -128,10 +123,7 @@ void roveDrive (bool MotorA, bool MotorB, int speedA, int speedB)
       analogWrite(11,speedB); 
 }
 
-
-/*
-Stops motors
-*/
+// Stops motors
 void roveStop ()
 {
       analogWrite(3,0);

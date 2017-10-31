@@ -1,3 +1,7 @@
+/* Donovan Keohane
+ * straight.ino
+ */
+
 #include <Wire.h>
 
 void sleep(int sec) {

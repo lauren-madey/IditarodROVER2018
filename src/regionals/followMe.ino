@@ -1,5 +1,8 @@
+/* Lauren Madey
+ * followMe.ino
+ */
 
-//Iditarod Rover
+
 /*L         R    
  --         --   [] --> rover veers to RIGHT with this program
 |  |__[ ]__|  |  [] --> ultra sonic sensor points this way 
@@ -22,7 +25,7 @@ void loop() {
   distance = getDistance();       // Call getDistance function to get value in inches.. 
   Serial.println(distance);  
   if (distance > 10) {            // If object is over 10 inches away.
-    roveDrive(HIGH,HIGH,50,100);  // Keep driving!
+    roveDrive(true,true,50,100);  // Keep driving!
   } else {
     roveStop();                   // Otherwise stop.
   }
@@ -40,7 +43,7 @@ int getDistance()
   int tempTotal=0;
 
   for (int i=1; i <= loops; i++) {
-    pulse = pulseIn(sonarPin, HIGH);      //Read sensor
+    pulse = pulseIn(sonarPin, true);      //Read sensor
     tempInches = pulse/147;
     tempTotal = tempTotal + tempInches;   //Calculate inches and add to total
   }
