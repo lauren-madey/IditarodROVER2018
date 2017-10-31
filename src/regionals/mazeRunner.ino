@@ -13,7 +13,7 @@ String incoming;
 
 void setup()
 { 
-  attachInterrupt(digitalPinToInterrupt (2),wheel,CHANGE);   //attach interrupt to Pin 2
+  attachInterrupt(digitalPinToInterrupt(2),wheel,CHANGE);   //attach interrupt to Pin 2
   digitalWrite(2,1);                                         // enable pullup resistor on D2
   pinMode(3,  OUTPUT);    //PWM control for motor outputs 1 and 2 is on digital pin 3/ A Speed
   pinMode(11, OUTPUT);    //PWM control for motor outputs 3 and 4 is on digital pin 11/ B Speed
@@ -22,46 +22,27 @@ void setup()
   Serial.begin(9600);
 }
 
+void sleep(int sec) {
+  int x = millis() + (sec * 1000);
+  while (millis() < x) {;}
+}
 
+void run()
+{ 
+  travelBlock();
+  sleep(1);
+  roveDrive(true, true, goSpeed, goSpeed);
+  sleep(1);
+  roveDrive(true, false, goSpeed, goSpeed);
+  sleep(3);
+  roveStop();
+
+  exit(1);
+}
 
 void loop()
 {
-  /* 
-    This section allows for a input coming from the serial port to determine the distance
-    This can be used later for sending a distance wirlessly throught the Xbee
-    -------------------------------------------------------------------------------------------
-    //If anything is on the serial port, read the full string in and store it in 'incoming'
-    while (Serial.available()) {
-      incoming = Serial.readStringUntil ('\n');       //get whatever was sent via the serial port unitl a line break
-      targetDistance = incoming.toInt();            // convert string to an integer (We need a number distance)
-      count=0;
-    }
-  */
-
-  int x;
-
-  for (x=0; x<2; x++) 
-  {
-    travelBlock();
-  }
-  
-  delay(1000);
-  
-  for (x=0; x<1; x++) 
-  {
-    roveDrive(true, false, goSpeed, goSpeed);
-    delay(4000);
-    roveStop();
-  }
-
-  delay(1000);   
-
-  for (x=0; x<1; x++) 
-  {
-    roveDrive(false, true, goSpeed, goSpeed);
-    delay(4000);
-    roveStop();
-  }
+  run();
 }
 
 //------------------------FUNCTIONS ----------------------------------------
