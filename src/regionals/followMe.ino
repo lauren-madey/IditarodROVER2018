@@ -25,9 +25,9 @@ void loop() {
   distance = getDistance();       // Call getDistance function to get value in inches.. 
   Serial.println(distance);  
   if (distance > 10) {            // If object is over 10 inches away.
-    roveDrive(true,true,50,100);  // Keep driving!
+    roveDrive(true,true,150 ,255); // Keep driving! 
   } else {
-    roveStop();                   // Otherwise stop.
+    roveDrive(true,true,255,75);  // If object is too close to the right, move left.
   }
 }
 
