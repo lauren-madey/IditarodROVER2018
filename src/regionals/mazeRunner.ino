@@ -2,77 +2,120 @@
  * mazeRunner.ino
  */
 
+#include <Wire.h>
+#include <Adafruit_Sensor.h>
+#include <Adafruit_LSM303_U.h>
+#include <math.h>
+Adafruit_LSM303_Mag_Unified mag = Adafruit_LSM303_Mag_Unified(12345);
 
-volatile long count=0;       //counter for the Wheel encoder
-int goSpeed=255;             //Speed for the Rover to cover distance
-int approachSpeed= 120;      //Slower speed when within a cetain distance of goal
-int targetDistance;          //Distance ot be covered in inches. Not set here since it is sent from Computer.
-int approachDistance = 5;   //Distance from target to slow down.
+volatile long count=0;
+int goSpeed=255;
+int approachSpeed= 120;
+int targetDistance;
+int approachDistance = 5;
 String incoming;
 
+float getHeading () {
+  float Pi = 3.14159;
+  sensors_event_t event;
+  mag.getEvent(&event);
 
-void setup()
-{ 
-  attachInterrupt(digitalPinToInterrupt(2),wheel,CHANGE);   //attach interrupt to Pin 2
-  digitalWrite(2,1);                                         // enable pullup resistor on D2
-  pinMode(3,  OUTPUT);    //PWM control for motor outputs 1 and 2 is on digital pin 3/ A Speed
-  pinMode(11, OUTPUT);    //PWM control for motor outputs 3 and 4 is on digital pin 11/ B Speed
-  pinMode(12, OUTPUT);    //direction control for motor outputs 1 and 2 is on digital pin 12 RIGHT WHEELS/ A Direction
-  pinMode(13, OUTPUT);    //direction control for motor outputs 3 and 4 is on digital pin 13 LEFT WHEELS/ B Direction
+  float headingTemp = (atan2(event.magnetic.y,event.magnetic.x) * 180) / Pi;
+
+  if (headingTemp < 0)
+  {
+    headingTemp = 360 + headingTemp;
+  }
+  return headingTemp;
+}
+
+void setup() { 
+  Serial.begin(9600);
+
+  if(!mag.begin())
+  {
+    Serial.println("Ooops, no LSM303 detected ... Check your wiring!");
+    while(1);
+  }
+
+  attachInterrupt(digitalPinToInterrupt(2),wheel,CHANGE);
+  digitalWrite(2,1);
+  pinMode(3,  OUTPUT);
+  pinMode(11, OUTPUT);
+  pinMode(12, OUTPUT);
+  pinMode(13, OUTPUT);
   Serial.begin(9600);
 }
 
-void sleep(int sec) {
+void sleep(float sec) {
   int x = millis() + (sec * 1000);
   while (millis() < x) {;}
 }
 
-void run()
-{ 
-  travelBlock();
-  sleep(1);
-  roveDrive(true, true, goSpeed, goSpeed);
-  sleep(1);
-  roveDrive(true, false, goSpeed, goSpeed);
-  sleep(3);
+void right() {
+  heading = getHeading();
+  target = floor(getHeading()) + 90.0;
+  if (target < 0)
+  {
+    target = 360 + target;
+  } else if (target > 360) {
+    target -= 360;
+  }
+  roveDrive(false, true, goSpeed, goSpeed);
+  while (heading > heading+5.0 || heading < heading-5.0) {
+    header = getHeader();
+  }
+  printf("Reached correct 90 degree right.")
   roveStop();
+  sleep(0.5);
+}
 
-  exit(1);
+void left() {
+  heading = getHeading();
+  target = floor(getHeading()) - 90.0;
+  if (target < 0)
+  {
+    target = 360 + target;
+  } else if (target > 360) {
+    target -= 360;
+  }
+  roveDrive(false, true, goSpeed, goSpeed);
+  while (heading > heading+5.0 || heading < heading-5.0) {
+    header = getHeader();
+  }
+  printf("Reached correct 90 degree left.")
+  roveStop();
+  sleep(0.5);
 }
 
 void loop()
 {
-  run();
+  travelBlock()
+  sleep(1.0)
+  right()
+  left()
 }
 
-//------------------------FUNCTIONS ----------------------------------------
-
-//-----------------------Driving a certian distance-------------------------
 void travelBlock()
 {  
-  // Calculate distance travelled in inches
-  // Wheel Circumference * Pi /8 * count
   float distanceTravelled = 2.975 * PI/8.00 * float(count);
 
-  Serial.println(distanceTravelled); //send result to Serial port
+  Serial.println(distanceTravelled);
 
   targetDistance=3;
 
-  // STOP the Rover if target distance is reached or no target Distance is set.
   if (distanceTravelled >= targetDistance)
   {
     roveStop();
     Serial.println("Stopping");
   }
 
-  //Go full speed if Rover is not within target distance yet
   else if (distanceTravelled < approachDistance)
   {
     roveDrive(true, true, goSpeed, goSpeed);
     Serial.println("Full Speed");
   }
 
-  //Slow Rover down while within target distance
   else if (distanceTravelled >= approachDistance)
   {
     roveDrive(true, true, approachSpeed, approachSpeed);
@@ -80,22 +123,13 @@ void travelBlock()
   }
 }
 
-//---------Interrup Sevice Routine for Wheel encoder------------------------
 void wheel()
 {
-  count++;                      //increment count by one whenever function is called.
+  count++;
   Serial.print("w,");          
   Serial.println(count);
 }
 
-//----------Rover Drive Functions-----------------------------------------
-/*
-Motor Control Function
-Motor A & B are boolean, High or Low sets the direction of one side.
-speedA & speedB determine the wheel speed for the sides.
-A = Left
-B = Right
-*/
 void roveDrive (bool MotorA, bool MotorB, int speedA, int speedB)
 {
       digitalWrite(12,!MotorA);
@@ -104,7 +138,6 @@ void roveDrive (bool MotorA, bool MotorB, int speedA, int speedB)
       analogWrite(11,speedB); 
 }
 
-// Stops motors
 void roveStop ()
 {
       analogWrite(3,0);
