@@ -18,3 +18,5 @@ Arduino IDE: https://www.arduino.cc/en/Main/Software - programming the actual mo
 * Enhance the preformance of the wheel Encoder and UltraSonicSensor
 
 * Use the X-bees component to send Arduino code wierlessly to the ROVER
+
+* Complete as many monthly challanges as we can
