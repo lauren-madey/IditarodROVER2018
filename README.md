@@ -1,5 +1,5 @@
 # IditarodROVER2018
-## [Iditarod Motorsports ROVER Team](http://iditarodmotorsports.weebly.com/)
+## [Iditarod Motorsports ROVER Team](https://iditarodmotorsport.wixsite.com/website)
 All code under /ten80 is written by Ten80.
 Default copyright laws apply for any code under /source.
 
